@@ -107,6 +107,14 @@ type Query {
       table: "subseenit"
       configuration: "postgresql_config"
     )
+  getSubseenitListByTopic(topic: String!): [Subseenit]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select * from subseenit where "topic" = $1
+      """
+      configuration: "postgresql_config"
+    )
   getSubseenit(id: ID!): Subseenit
     @dbquery(
       type: "postgresql"
@@ -167,7 +175,6 @@ type Mutation {
     )
   insertPost(
     image: String!
-    created_at: DateTime!
     body: String!
     subseenit_id: ID!
     title: String!
@@ -188,7 +195,7 @@ type Mutation {
       dml: DELETE
       configuration: "postgresql_config"
     )
-  insertSubseenit(created_at: DateTime!, topic: String!): Subseenit
+  insertSubseenit(topic: String!): Subseenit
     @dbquery(
       type: "postgresql"
       schema: "public"

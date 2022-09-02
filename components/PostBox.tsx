@@ -3,6 +3,12 @@ import React, { useState } from 'react';
 import Avatar from './Avatar';
 import { LinkIcon, PhotographIcon } from '@heroicons/react/outline';
 import { useForm } from 'react-hook-form';
+import { useMutation } from '@apollo/client';
+import { ADD_POST, ADD_SUBSEENIT } from '../graphql/mutations';
+import client from '../apollo-client';
+import { GET_SUBSEENIT_BY_TOPIC } from '../graphql/queries';
+import toast from 'react-hot-toast';
+
 
 type FormData = {
   postTitle: string
@@ -13,6 +19,9 @@ type FormData = {
 
 function PostBox() {
     const { data: session } = useSession()
+    const [addPost] = useMutation(ADD_POST);
+    const [addSubseenit] = useMutation(ADD_SUBSEENIT);
+
     const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
     const {
       register,
@@ -24,6 +33,80 @@ function PostBox() {
 
     const onSubmit = handleSubmit(async (formData) => {
       console.log(formData)
+      const notification = toast.loading('Creating new post...')
+
+      try {
+        //query for the subreddit topic...
+        const { data: { getSubseenitListByTopic } } = await client.query({
+          query: GET_SUBSEENIT_BY_TOPIC,
+          variables: {
+            topic: formData.subSeenit
+          }
+        })
+
+        const subseenitExists = getSubseenitListByTopic.length > 0;
+
+        if (!subseenitExists) {
+          //create subseenit...
+          console.log('Subseen it is new! -> creating a new Subseenit!')
+
+          const { data: { insertSubseenit: newSubseenit } } = await addSubseenit({
+            variables: {
+              topic: formData.subSeenit
+            }
+          })
+
+          console.log('Creating post....', formData);
+
+          const image = formData.postImage || ''
+
+          const { data: { insertPost: newPost } } = await addPost({
+            variables: {
+              body: formData.postBody,
+              image: image,
+              subseenit_id: newSubseenit.id,
+              title: formData.postTitle,
+              username: session?.user?.name,
+            }
+          })
+
+          console.log('New post added', newPost);
+
+        } else {
+          // use existing subseenit...
+          console.log('Using exiting subseenit');
+          console.log(getSubseenitListByTopic)
+
+          const image = formData.postImage || ''
+
+          const { data : {insertPost: newPost} } = await addPost({
+            variables: {
+              body: formData.postBody,
+              image: image,
+              subseenit_id: getSubseenitListByTopic[0].id,
+              title: formData.postTitle,
+              username: session?.user?.name,
+            }
+          })
+
+          console.log('New post added', newPost);
+        }
+      
+      // after the post has been added... reset fields
+      setValue('postBody','')
+      setValue('postImage','')
+      setValue('postTitle','')
+      setValue('subSeenit','')
+
+      toast.success('New Post Created!', {
+        id: notification //for updating the toast already created 
+      })
+
+      } catch (error) {
+        toast.error('Whoops something went wrong!', {
+          id: notification
+        })
+      }
     })
 
   return (
