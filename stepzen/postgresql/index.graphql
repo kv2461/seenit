@@ -17,15 +17,25 @@ type Post {
   created_at: DateTime
   id: ID!
   image: String
-  subseenit: Subseenit
+  subseenit: [Subseenit]
     @materializer(
-      query: "getSubseenit"
+      query: "getSubseenitListById"
       arguments: [{ name: "id", field: "subseenit_id" }]
     )
   subseenit_id: ID
   title: String
   username: String
   voteList: [Vote] @materializer(query: "getVoteUsingPost_id")
+  votes: [Vote]
+    @materializer(
+      query: "getVotesByPostId"
+      arguments: [{ name: "post_id", field: "id" }]
+    )
+  comments: [Comment]
+    @materializer(
+      query: "getCommentByPostId"
+      arguments: [{ name: "post_id", field: "id" }]
+    )
 }
 
 type Subseenit {
@@ -144,6 +154,36 @@ type Query {
       type: "postgresql"
       schema: "public"
       table: "vote"
+      configuration: "postgresql_config"
+    )
+
+  """
+  Extra inner queries using materializer
+  """
+  getSubseenitListById(id: ID!): [Subseenit]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select * from "subseenit" where "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+
+  getVotesByPostId(post_id: ID!): [Vote]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select * from "vote" where "post_id" = $1
+      order by "created_at" desc
+      """
+      configuration: "postgresql_config"
+    )
+  getCommentByPostId(post_id: ID!): [Comment]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select * from "comment" where "post_id" = $1
+      """
       configuration: "postgresql_config"
     )
 }
