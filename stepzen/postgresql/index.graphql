@@ -85,6 +85,17 @@ type Query {
       """
       configuration: "postgresql_config"
     )
+  getPostListByTopic(topic: String!): [Post]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select *, "post".id as id from "post"
+      join "subseenit" on "subseenit"."id" = "post"."subseenit_id"
+      where "subseenit"."topic" = $1
+      order  by "post"."created_at" desc
+      """
+      configuration: "postgresql_config"
+    )
   getPost(id: ID!): Post
     @dbquery(
       type: "postgresql"

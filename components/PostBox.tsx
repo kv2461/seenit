@@ -17,7 +17,11 @@ type FormData = {
   subseenit: string
 }
 
-function PostBox() {
+type Props = {
+  subseenit?: string
+}
+
+function PostBox({ subseenit } : Props) {
     const { data: session } = useSession()
     const [addPost] = useMutation(ADD_POST, {
       refetchQueries: [
@@ -45,7 +49,7 @@ function PostBox() {
         const { data: { getSubseenitListByTopic } } = await client.query({
           query: GET_SUBSEENIT_BY_TOPIC,
           variables: {
-            topic: formData.subseenit
+            topic: subseenit || formData.subseenit
           }
         })
 
@@ -124,7 +128,7 @@ function PostBox() {
                 disabled={!session} 
                 className='flex-1 rounded-md bg-gray-50 p-2 pl-5 outline-none' 
                 type='text' 
-                placeholder={session ? 'Create a post by entering a title!': 'Sign in to post'}
+                placeholder={session ? subseenit ? `Create a post in r/${subseenit}`:'Create a post by entering a title!': 'Sign in to post'}
             />
 
             <PhotographIcon
@@ -145,8 +149,9 @@ function PostBox() {
             type='text' 
             placeholder='Text (optional)' />
           </div>
-
+          
           {/* Subseenit */}
+          {!subseenit && (
           <div className='flex items-center px-2'>
             <p className='min-w-[90px]'>Subseenit:</p>
             <input 
@@ -154,7 +159,7 @@ function PostBox() {
             {...register('subseenit', {required: true})} 
             type='text' 
             placeholder='i.e. cats' />
-          </div>
+          </div>)}
 
           {imageBoxOpen && (
             <div className='flex items-center px-2'>
