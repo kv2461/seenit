@@ -11,7 +11,7 @@ export const ADD_COMMENT = gql`
         }
     }
 `
-//note that this vote doesn't upsert
+//note that this vote doesn't upsert but our logic in the front end uses defensive programming so it doesn't allow for multiple votes per user 
 export const ADD_VOTE = gql`
     mutation MyMutation($post_id: ID!, $username: String!, $upvote: Boolean!) {
         insertVote(post_id: $post_id, username: $username, upvote: $upvote) {

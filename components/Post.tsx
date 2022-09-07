@@ -46,7 +46,9 @@ function Post({post}: Props) {
 
         console.log('voting...', isUpvote)
 
-        await addVote({
+        const {
+            data: { insertVote: newVote}
+        } = await addVote({
             variables: {
                 post_id: post.id,
                 username: session.user?.name,
@@ -54,17 +56,32 @@ function Post({post}: Props) {
             },
         })
     }
-
+    
     useEffect(()=> {
         const votes: Vote[] = data?.getVotesByPostId;
 
         //latest vote (as we sorted by newly created first in SQL query)
-        //could be improved  by moving it to the orignial query
+        //could be improved  by moving it to the original query
         const vote = votes?.find(vote => vote.username === session?.user?.name)?.upvote
 
         setVote(vote)
-
     },[data])
+
+    const displayVotes = (data: any) => {
+        const votes: Vote[] = data?.getVotesByPostId
+        const displayNumber = votes?.reduce(
+            (total, vote) => (vote.upvote ? (total += 1) : (total -= 1)), 0)
+
+            if (votes?.length === 0) return 0;
+
+            if (displayNumber === 0) {
+                return votes[0]?.upvote ? 1 : -1 
+            }
+
+        return displayNumber;
+    }
+
+    
 
     if(!post) return (
         <div className='flex w-full items-center justify-center p-10 text-xl'>
@@ -80,7 +97,7 @@ function Post({post}: Props) {
         {/* Vote on lefthand side*/}
         <div className='flex flex-col items-center justify-start space-y-1 rounded-l-md bg-gray-50 p-4 text-gray-400'>
             <ArrowUpIcon onClick={() => upVote(true)} className={`voteButtons hover:text-red-400 ${vote && 'text-red-400'}`} />
-            <p className='text-black font-bold text-xs'>0</p>
+            <p className='text-black font-bold text-xs'>{displayVotes(data)}</p>
             <ArrowDownIcon onClick={() => upVote(false)} className={`voteButtons hover:text-blue-400 ${vote === false && 'text-blue-400'}`} />
         </div>
 
