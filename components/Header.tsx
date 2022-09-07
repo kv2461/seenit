@@ -5,6 +5,7 @@ import redditSignin from '../assets/images/reddit-signin.png';
 import { ChevronDownIcon, HomeIcon, MenuIcon, SearchIcon } from '@heroicons/react/solid';
 import { BellIcon, ChatIcon, GlobeIcon, PlusIcon, SparklesIcon, SpeakerphoneIcon, VideoCameraIcon } from '@heroicons/react/outline';
 import { signIn, useSession, signOut } from 'next-auth/react';
+import Link from 'next/link';
 
 function Header() {
     const { data: session } = useSession();
@@ -12,7 +13,9 @@ function Header() {
   return (
     <div className='sticky top-0 z-50 flex bg-white px-4 py-2 shadow-sm items-center'>
         <div className='relative h-14 w-20 flex-shrink-0 cursor-pointer'>
+            <Link href='/'>
             <Image src={logo} layout='fill' />
+            </Link>
         </div>
 
         <div className='mx-7 flex items-center xl:min-w-[300px]'>
