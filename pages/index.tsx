@@ -14,7 +14,7 @@ const Home: NextPage = () => {
       {/* postbox */}
       <PostBox />
 
-      <div>
+      <div className='flex'>
         {/* feed */}
         <Feed />
       </div>

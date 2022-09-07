@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
 import { ADD_POST, ADD_SUBSEENIT } from '../graphql/mutations';
 import client from '../apollo-client';
-import { GET_SUBSEENIT_BY_TOPIC } from '../graphql/queries';
+import { GET_SUBSEENIT_BY_TOPIC, GET_ALL_POSTS } from '../graphql/queries';
 import toast from 'react-hot-toast';
 
 
@@ -14,12 +14,17 @@ type FormData = {
   postTitle: string
   postBody: string
   postImage: string
-  subSeenit: string
+  subseenit: string
 }
 
 function PostBox() {
     const { data: session } = useSession()
-    const [addPost] = useMutation(ADD_POST);
+    const [addPost] = useMutation(ADD_POST, {
+      refetchQueries: [
+        GET_ALL_POSTS,
+        'getPostList'
+      ],
+    });
     const [addSubseenit] = useMutation(ADD_SUBSEENIT);
 
     const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
@@ -40,7 +45,7 @@ function PostBox() {
         const { data: { getSubseenitListByTopic } } = await client.query({
           query: GET_SUBSEENIT_BY_TOPIC,
           variables: {
-            topic: formData.subSeenit
+            topic: formData.subseenit
           }
         })
 
@@ -52,7 +57,7 @@ function PostBox() {
 
           const { data: { insertSubseenit: newSubseenit } } = await addSubseenit({
             variables: {
-              topic: formData.subSeenit
+              topic: formData.subseenit
             }
           })
 
@@ -96,7 +101,7 @@ function PostBox() {
       setValue('postBody','')
       setValue('postImage','')
       setValue('postTitle','')
-      setValue('subSeenit','')
+      setValue('subseenit','')
 
       toast.success('New Post Created!', {
         id: notification //for updating the toast already created 
@@ -146,7 +151,7 @@ function PostBox() {
             <p className='min-w-[90px]'>Subseenit:</p>
             <input 
             className = 'm-2 flex-1 bg-blue-50 p-2 outline-none'
-            {...register('subSeenit', {required: true})} 
+            {...register('subseenit', {required: true})} 
             type='text' 
             placeholder='i.e. cats' />
           </div>
@@ -169,7 +174,7 @@ function PostBox() {
                 <p>-A Post Title is required</p>
               )}
 
-              {errors.subSeenit?.type === 'required' && (
+              {errors.subseenit?.type === 'required' && (
                 <p>-A Subseenit is required</p>
               )}
             </div>

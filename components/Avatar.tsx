@@ -13,7 +13,7 @@ function Avatar({ seed, large }: Props) {
     <div className={`relative overflow-hidden h-10 w-10 rounded-full border-gray-300 bg-white ${ large && 'h-20 w-20'}`}>
         <Image
             layout='fill'
-            src={ seed|| `https://avatars.dicebear.com/api/bottts/${session?.user?.name || 'placeholder'}.svg`}
+            src={ `https://avatars.dicebear.com/api/bottts/${seed}.svg` || `https://avatars.dicebear.com/api/bottts/${session?.user?.name || 'placeholder'}.svg`}
         />
     </div>
   )
