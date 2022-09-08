@@ -1,27 +1,31 @@
-# Next.js + Tailwind CSS Example
+# [Seenit](https://github.com/kv2461/seenit)
 
-This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.0)](https://tailwindcss.com/blog/tailwindcss-v3) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
+ 
+ 
+[Seenit](https://github.com/kv2461/seenit) is a Reddit clone that allows users to create posts and subseenits, as well as comment and vote on posts. It uses Reddit authentication, so users can just log in with their regular Reddit account.
+ 
+ ## Technologies Used
+   * Frontend:
+     * React
+     * NextJS
+     * Tailwind
+   * Backend:
+     * GraphQL
+     * PostgreSQL
+     * NodeJS
+   
+## Features
+  * Reddit user authentication
+<!--     * ![login](https://login.gif) -->
+* User authenticated action such as creating post, commenting, and voting
+<!--     * ![login](https://login.gif) -->
 
-## Deploy your own
+ 
+## Code Highlights
+  * Uses GraphQL with PostgreSQL in order to solve the problem of over-fetching and under-fetching with queries.
+    * ![Component Polymorphism](https://user.png)
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
-
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
-
-```bash
-npx create-next-app --example with-tailwindcss with-tailwindcss-app
-```
-
-```bash
-yarn create next-app --example with-tailwindcss with-tailwindcss-app
-```
-
-```bash
-pnpm create next-app --example with-tailwindcss with-tailwindcss-app
-```
-
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+ 
+ ## Upcoming Features
+   * Post Rankings
+   * Search/recommendations  by post title, subseenits, and votes
