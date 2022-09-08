@@ -23,7 +23,7 @@
  
 ## Code Highlights
   * Uses GraphQL with PostgreSQL in order to solve the problem of over-fetching and under-fetching with queries.
-    * ![Component Polymorphism](https://user.png)
+
 
  
  ## Upcoming Features
