@@ -208,6 +208,16 @@ type Query {
       """
       configuration: "postgresql_config"
     )
+  getSubseenitListLimit(limit: Int!): [Subseenit]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select * from "subseenit"
+      order by "created_at" desc
+      limit $1
+      """
+      configuration: "postgresql_config"
+    )
 }
 
 """
