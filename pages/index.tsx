@@ -15,9 +15,6 @@ const Home: NextPage = () => {
 
   const subseenits: Subseenit[] = data?.getSubseenitListLimit;
 
-  console.log(subseenits)
-  console.log(error)
-
   return (
     <div className="my-7 mx-auto max-w-5xl">
       <Head>
